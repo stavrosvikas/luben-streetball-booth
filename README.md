@@ -25,5 +25,8 @@ The video booth for the touch screen at the Luben Streetball 1vs1 event (Σάβ�
 - **S** key: opens the operator panel (camera rotation, capture length, freeze, intensity, fire colour).
 - `booth-v3.html?auto=quake`: test hook that picks a filter and starts recording on its own.
 
-## Not done yet
-- The QR is a **placeholder**. The video has to be uploaded to the booth server, and the QR has to point to the link the server returns.
+## Colours
+Every filter uses the Luben gradient (red `#E72429` → magenta `#B32089`, top-left to bottom-right) in place of flat magenta. RGB Ghost splits it: one copy is brand magenta and the other brand red. The fire, glows and spray use the same two colours.
+
+## The totem screen
+The screen that runs at the event lives in **`totem-ui/`** (see its README). It uploads the clip to the booth server, the server runs `booth-v3.html` in headless Chrome to render the filter, and the QR points to the real clip.

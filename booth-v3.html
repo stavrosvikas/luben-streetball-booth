@@ -59,7 +59,7 @@ canvas#view{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;di
 .hero{position:absolute;left:0;right:0;top:24cqh;display:flex;flex-direction:column;align-items:center;text-align:center;pointer-events:none;transform:rotate(-4deg)}
 .hero .l1:not(.l3){font-size:5.6cqh!important;align-self:flex-start;margin-left:13cqw}
 .hero .l1{font:italic 800 7.6cqh/0.92 var(--cond);text-transform:uppercase;text-shadow:0 .6cqh 2.4cqh rgba(0,0,0,.7)}
-.hero .l2{font:italic 900 19cqh/0.82 var(--cond);color:var(--mag);letter-spacing:-.01em;text-shadow:0 0 4cqh rgba(230,0,126,.45),0 .8cqh 0 rgba(0,0,0,.55)}
+.hero .l2{font:italic 900 19cqh/0.82 var(--cond);color:var(--mag);letter-spacing:-.01em;text-shadow:0 0 4cqh rgba(179,32,137,.45),0 .8cqh 0 rgba(0,0,0,.55)}
 .hero .l3{font-size:6.6cqh;margin-top:-.6cqh;position:relative;align-self:flex-end;margin-right:14cqw}
 /* sheared tag, like "ΤΟ ΑΠΟΛΥΤΟ ΜΟΝΑΚΙ CHALLENGE" on the site */
 .hero .sub{margin-top:2.4cqh;font:italic 800 2.6cqh/1 var(--cond);letter-spacing:.05em;text-transform:uppercase;background:#000;padding:1cqh 3.4cqw;transform:skewX(-14deg);box-shadow:0 .8cqh 2.4cqh rgba(0,0,0,.45)}
@@ -71,15 +71,15 @@ canvas#view{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;di
 .fbtn{display:flex;align-items:center;gap:2.4cqw;padding:.9cqh 2.4cqw;border-radius:.6cqh;border:.35cqh solid rgba(255,255,255,.22);background:rgba(8,7,10,.85);color:#fff;cursor:pointer;text-align:left;backdrop-filter:blur(6px)}
 .fbtn b{font:italic 900 2.4cqh/1 var(--cond);letter-spacing:.02em;text-transform:uppercase}
 .fbtn .ic{flex:none;width:4.4cqh;height:4.4cqh;border-radius:.7cqh}
-.fbtn[aria-pressed="true"]{border-color:var(--mag);background:rgba(230,0,126,.22);box-shadow:0 0 0 .3cqh var(--mag),0 0 3cqh rgba(230,0,126,.5)}
-.ic.g{background:radial-gradient(circle at 70% 50%,var(--mag) 0 28%,transparent 29%),radial-gradient(circle at 50% 50%,rgba(230,0,126,.55) 0 28%,transparent 29%),radial-gradient(circle at 30% 50%,rgba(230,0,126,.22) 0 28%,transparent 29%),#1b1820}
+.fbtn[aria-pressed="true"]{border-color:var(--mag);background:rgba(179,32,137,.22);box-shadow:0 0 0 .3cqh var(--mag),0 0 3cqh rgba(179,32,137,.5)}
+.ic.g{background:radial-gradient(circle at 70% 50%,var(--mag) 0 28%,transparent 29%),radial-gradient(circle at 50% 50%,rgba(179,32,137,.55) 0 28%,transparent 29%),radial-gradient(circle at 30% 50%,rgba(179,32,137,.22) 0 28%,transparent 29%),#1b1820}
 .ic.q{background:repeating-linear-gradient(90deg,var(--mag) 0 .7cqh,#fff .7cqh 1cqh,#111 1cqh 1.6cqh)}
 .ic.r{background:linear-gradient(90deg,var(--mag) 0 33%,var(--red) 33% 66%,#fff 66%)}
 .ic.s{background:var(--mag);box-shadow:inset 0 0 0 .7cqh #fff;transform:rotate(-7deg)}
 .ic.f{background:radial-gradient(ellipse 45% 70% at 50% 100%,#fff 0 18%,var(--red) 40%,var(--mag) 65%,#3a0020 90%)}
 .ic.c{background:linear-gradient(135deg,var(--mag) 0 40%,#111 40% 60%,var(--red) 60%);box-shadow:inset 0 0 0 .4cqh #fff}
 
-.go{position:absolute;left:50%;bottom:4cqh;transform:translateX(-50%);white-space:nowrap;font:italic 900 3.6cqh/1 var(--cond);letter-spacing:.04em;padding:1.4cqh 10cqw;border:0;border-radius:99px;background:var(--grad);color:#fff;cursor:pointer;box-shadow:0 1cqh 3cqh rgba(230,0,126,.5);animation:pulse 1.6s ease-in-out infinite}
+.go{position:absolute;left:50%;bottom:4cqh;transform:translateX(-50%);white-space:nowrap;font:italic 900 3.6cqh/1 var(--cond);letter-spacing:.04em;padding:1.4cqh 10cqw;border:0;border-radius:99px;background:var(--grad);color:#fff;cursor:pointer;box-shadow:0 1cqh 3cqh rgba(179,32,137,.5);animation:pulse 1.6s ease-in-out infinite}
 .go:disabled{background:#2a2630;color:var(--mute);box-shadow:none;animation:none;cursor:default}
 @keyframes pulse{50%{transform:translateX(-50%) scale(1.05)}}
 
@@ -227,7 +227,9 @@ const view = $('#view'), vctx = view.getContext('2d');
 const video = document.createElement('video');
 video.muted = true; video.playsInline = true;
 
-const MAG = '#e6007e', RED = '#ff2a2a', WHITE = '#ffffff';
+// Luben gradient instead of flat magenta: red #E72429 -> magenta #B32089, across the frame top-left to bottom-right.
+const BRED = '#E72429', BMAG = '#B32089';
+const MAG = (() => { const g = document.createElement('canvas').getContext('2d').createLinearGradient(0, 0, 432, 768); g.addColorStop(0, BRED); g.addColorStop(1, BMAG); return g; })(), RED = BRED, WHITE = '#ffffff';
 const CFG = {
   ghost:   {name:'GHOST ECHO',      freeze:false},
   quake:   {name:'EARTHQUAKE ECHO', freeze:true},
@@ -255,7 +257,7 @@ if(window.LOGO_URI){ logoImg.src = window.LOGO_URI; $('#logoTL').src = window.LO
   const gauss = () => (Math.random()+Math.random()+Math.random()-1.5)/1.5;
   for(const [cx, cy, r] of blooms){
     const g = x.createRadialGradient(cx, cy, 0, cx, cy, r*1.25);
-    g.addColorStop(0, 'rgba(230,0,126,.75)'); g.addColorStop(.55, 'rgba(230,0,126,.25)'); g.addColorStop(1, 'rgba(230,0,126,0)');
+    g.addColorStop(0, 'rgba(179,32,137,.75)'); g.addColorStop(.55, 'rgba(179,32,137,.25)'); g.addColorStop(1, 'rgba(179,32,137,0)');
     x.fillStyle = g; x.fillRect(0,0,W,H);
     for(let k=0;k<2600;k++){
       const px = cx + gauss()*r*1.3, py = cy + gauss()*r*1.3;
@@ -639,7 +641,7 @@ function renderRGB(o, X, e){
   const ramp = Math.min(1, t/8);                                         // effect is on from the first frames
   const r = I*13*ramp*(.75 + .25*Math.sin(t*.22));
   o.drawImage(frameAt(e.i, f, X.slots[0]),0,0);
-  [[MAG, -1, 3], [RED, 1, 6]].forEach(([col, dir, lag], k) => {
+  [[BMAG, -1, 3], [BRED, 1, 6]].forEach(([col, dir, lag], k) => {
     const src = frameAt(Math.max(0, e.i - lag), f, X.slots[k+1]);
     drawT(o, tintFull(src, col), dir*r, dir*r*.15, 0, 1.03, .6, 'screen');
   });
@@ -679,7 +681,7 @@ function flameLut(name){
   if(FLAME_LUTS[name]) return FLAME_LUTS[name];
   const stops = name==='natural'
     ? [[0,[0,0,0,0]],[.12,[60,8,0,0]],[.28,[150,30,0,150]],[.45,[235,85,0,225]],[.62,[255,145,25,255]],[.8,[255,205,90,255]],[1,[255,250,225,255]]]
-    : [[0,[0,0,0,0]],[.12,[60,0,22,0]],[.28,[140,0,60,150]],[.45,[230,0,110,225]],[.62,[255,40,60,255]],[.8,[255,120,100,255]],[.92,[255,200,185,255]],[1,[255,250,240,255]]];
+    : [[0,[0,0,0,0]],[.12,[60,0,22,0]],[.28,[140,0,60,150]],[.45,[179,32,137,225]],[.62,[231,36,41,255]],[.8,[255,120,100,255]],[.92,[255,200,185,255]],[1,[255,250,240,255]]];
   const lut = new Uint8ClampedArray(256*4);
   for(let i=0;i<256;i++){
     const v = i/255; let k = 0; while(k < stops.length-2 && v > stops[k+1][0]) k++;
@@ -745,7 +747,7 @@ function renderFlame(o, X, e){
   lx.globalCompositeOperation = 'source-over'; lx.clearRect(0,0,CW,CH);
   lx.filter = 'contrast(1.15) saturate(1.1)'; lx.drawImage(X.cuts[i],0,0); lx.filter = 'none';
   const g = lx.createLinearGradient(0, CH, 0, 0);
-  const tone = S.flamePal==='natural' ? ['rgba(255,120,20,.16)','rgba(255,90,0,0)'] : ['rgba(255,30,90,.14)','rgba(230,0,126,0)'];   // light touch: keep his blacks clean
+  const tone = S.flamePal==='natural' ? ['rgba(255,120,20,.16)','rgba(255,90,0,0)'] : ['rgba(255,30,90,.14)','rgba(179,32,137,0)'];   // light touch: keep his blacks clean
   g.addColorStop(0, tone[0]); g.addColorStop(1, tone[1]);
   lx.globalCompositeOperation = 'source-atop'; lx.fillStyle = g; lx.fillRect(0,0,CW,CH);   // tint only on top of the player
   lx.globalCompositeOperation = 'source-over';
@@ -777,7 +779,7 @@ function cardBase(X){
   // spray bursts
   for(const [cx, cy, r] of [[CW*.95, CH*.06, 210], [CW*.02, CH*.62, 170]]){
     const g = x.createRadialGradient(cx, cy, 0, cx, cy, r);
-    g.addColorStop(0, 'rgba(230,0,126,.6)'); g.addColorStop(1, 'rgba(230,0,126,0)');
+    g.addColorStop(0, 'rgba(179,32,137,.6)'); g.addColorStop(1, 'rgba(179,32,137,0)');
     x.fillStyle = g; x.fillRect(0,0,CW,CH);
     for(let k=0;k<1500;k++){
       const ang = R()*Math.PI*2, d = Math.pow(R(),.6)*r*1.2;
@@ -848,7 +850,7 @@ function renderCard(o, X, e){
   o.restore();
   // the player in colour, with a magenta glow behind
   o.save(); o.translate(0, CH*.04);
-  o.filter = 'drop-shadow(0 0 14px rgba(230,0,126,.65))'; o.drawImage(X.cuts[i], 0, 0); o.filter = 'none';
+  o.filter = 'drop-shadow(0 0 14px rgba(179,32,137,.65))'; o.drawImage(X.cuts[i], 0, 0); o.filter = 'none';
   o.filter = 'contrast(1.12) saturate(1.15)'; o.drawImage(X.cuts[i], 0, 0); o.filter = 'none';
   o.restore();
   // card frame: white edge, magenta inner line, notched corners, pixel glitch on the edges

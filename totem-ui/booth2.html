@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0b0a0d">
+<title>Booth · Luben Streetball</title>
+<link rel="stylesheet" href="css/booth2.css">
+</head>
+<!-- The booth with Stavros's screen design (10/11). Same logic and URL options as booth.html (see there);
+     defaults: &fx=ghost,quake,rgb,sticker,onfire,card (Stavros's filters on booth-fx; onfire = his flame + the Ioannou reaction) &sec=3, no timer on the QR screen (&back=45 brings it back). -->
+<body data-step="boot">
+<div class="stage">
+  <div class="cam"><video id="cam" autoplay muted playsinline></video></div>
+  <video id="replay" class="replay" muted playsinline loop></video>
+  <div class="shade"></div>
+
+  <!-- idle decoration: spray blooms in the Luben gradient, half court in perspective, black balls -->
+  <div class="deco">
+    <div class="dim"></div>
+    <canvas id="spray" width="432" height="768"></canvas>
+    <!-- FIBA half court, 1 unit = 3 cm (15 m × 14 m → 500 × 467) -->
+    <svg class="court" viewBox="-10 -10 520 487" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2.4" stroke-linecap="round">
+      <rect x="0" y="0" width="500" height="467"/>
+      <rect x="168" y="0" width="164" height="193"/>
+      <circle cx="250" cy="193" r="60"/>
+      <path d="M22 0 V99 A225 225 0 0 0 478 99 V0"/>
+      <path d="M210 52 A40 40 0 0 0 290 52"/>
+      <path d="M220 40 H280" stroke-width="4" stroke-opacity=".6"/>
+      <circle cx="250" cy="52" r="8" stroke="#E72429" stroke-opacity=".9" stroke-width="3"/>
+      <path d="M190 467 A60 60 0 0 1 310 467"/>
+    </svg>
+    <img class="ball b1" src="assets/booth/ui/ball1.png" alt="">
+    <img class="ball b2" src="assets/booth/ui/ball2.png" alt="">
+  </div>
+
+  <div class="vf"><i></i><i></i><i></i><i></i></div>
+  <img class="logo" src="assets/streetball_logo.png" alt="Luben Streetball 1vs1">
+  <div class="live"><i></i><span id="liveTxt">LIVE</span></div>
+  <div class="pending" id="pending" hidden></div>
+
+  <!-- idle -->
+  <div class="hero">
+    <div class="l1">ΘΕΛΕΙΣ ΝΑ ΓΙΝΕΙΣ</div>
+    <div class="l2">VIRAL</div>
+    <div class="l1 l3">ΠΡΟΦΑΝΩΣ</div>
+    <div class="sub"><span>ΔΙΑΛΕΞΕ ΦΙΛΤΡΟ · ΠΑΤΑ <em>ΤΡΑΒΑ</em></span></div>
+  </div>
+  <div class="fx" id="fx"></div>
+  <button class="start" id="start">● ΤΡΑΒΑ</button>
+
+  <!-- countdown / recording -->
+  <div class="count" id="count"></div>
+  <div class="rec"><i></i>REC<div class="bar"><b id="recBar"></b></div></div>
+
+  <!-- done: the clip plays full screen, small QR bottom left -->
+  <div class="wait" id="wait" data-text="ΓΙΝΕΣΑΙ VIRAL…"><b></b>ΓΙΝΕΣΑΙ VIRAL…</div>
+  <div class="qr-card"><div class="qr" id="qr"></div><span>ΣΚΑΝΑΡΕ &amp; ΚΑΤΕΒΑΣΕ ΤΟ</span></div>
+  <div class="gift" id="gift"></div>
+  <button class="next" id="next">ΕΠΟΜΕΝΟΣ</button>
+  <div class="back" id="back"></div>
+
+  <!-- boot / errors -->
+  <div class="boot">
+    <div class="msg" id="bootMsg">ΑΝΟΙΓΕΙ Η ΚΑΜΕΡΑ</div>
+    <button class="start small" id="retry" hidden>ΞΑΝΑ</button>
+  </div>
+
+  <pre class="debug" id="debug" hidden></pre>
+</div>
+<script>
+// magenta spray bloom bleeding in from the corners, painted once
+(function () {
+  const c = document.getElementById('spray'), x = c.getContext('2d'), W = c.width, H = c.height;
+  const gauss = () => (Math.random() + Math.random() + Math.random() - 1.5) / 1.5;
+  // Luben gradient: red bloom up top, magenta ones low
+  for (const [cx, cy, r, c, hi] of [[W * 1.02, H * .32, 210, '231,36,41', '#ff6a5c'], [W * -.05, H * .86, 190, '179,32,137', '#d957b4'], [W * .95, H * .98, 150, '179,32,137', '#d957b4']]) {
+    const g = x.createRadialGradient(cx, cy, 0, cx, cy, r * 1.25);
+    g.addColorStop(0, `rgba(${c},.75)`); g.addColorStop(.55, `rgba(${c},.25)`); g.addColorStop(1, `rgba(${c},0)`);
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    for (let k = 0; k < 2600; k++) {
+      const px = cx + gauss() * r * 1.3, py = cy + gauss() * r * 1.3, d = Math.hypot(px - cx, py - cy) / r;
+      x.globalAlpha = Math.max(0, .9 - d * .5) * Math.random();
+      x.fillStyle = Math.random() < .08 ? hi : `rgb(${c})`;
+      x.beginPath(); x.arc(px, py, Math.random() < .03 ? 2.5 + Math.random() * 3 : .4 + Math.random() * 1.2, 0, 7); x.fill();
+    }
+    x.globalAlpha = 1;
+  }
+})();
+</script>
+<script src="js/vendor/qrcode.js"></script>
+<script src="js/booth.js"></script>
+</body>
+</html>
